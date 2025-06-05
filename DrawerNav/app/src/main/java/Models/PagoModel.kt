@@ -1,5 +1,6 @@
 package Models
 
+import java.io.Serializable
 import java.sql.Date
 
 data class PagoModel(
@@ -8,4 +9,4 @@ data class PagoModel(
     val fecha: Date,
     val metodoPago: String,
     val citas: List<CitaModel> = emptyList()
-)
+) : Serializable

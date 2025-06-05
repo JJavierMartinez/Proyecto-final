@@ -1,5 +1,6 @@
 package Models
 
+import java.io.Serializable
 import java.util.Date
 
 data class PacienteModel(
@@ -14,4 +15,4 @@ data class PacienteModel(
     val fecha_registro: Date,
     val historial: List<HistorialModel> = emptyList(),
     val dueno: UsuarioModel
-)
+) : Serializable

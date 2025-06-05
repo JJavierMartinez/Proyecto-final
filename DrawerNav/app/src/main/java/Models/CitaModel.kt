@@ -1,5 +1,6 @@
 package Models
 
+import java.io.Serializable
 import java.util.Date
 
 data class CitaModel(
@@ -9,4 +10,4 @@ data class CitaModel(
     val usuario: UsuarioModel,
     val pago: PagoModel? = null,
     val paciente: PacienteModel
-)
+) : Serializable

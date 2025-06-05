@@ -1,5 +1,6 @@
 package com.example.drawernav
 
+import Models.UsuarioModel
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -10,7 +11,11 @@ import androidx.core.view.WindowInsetsCompat
 import android.content.Intent
 import android.widget.TextView
 import android.widget.Toast
-
+import com.example.drawernav.apiservice.UsuarioApiService
+import com.example.drawernav.network.RetrofitClientInstance
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 private lateinit var loginButton: Button
 private lateinit var emailEditText: EditText
@@ -44,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
     private fun setupLoginButton() {
         loginButton.setOnClickListener {
             if (isValidCredentials()) {
-                navigateToMainActivity()
+                doLogin(emailEditText.text.toString(), passwordEditText.text.toString())
             } else {
                 showError("Credenciales incorrectas")
             }
@@ -63,8 +68,10 @@ class LoginActivity : AppCompatActivity() {
         return email.isNotEmpty() && password.isNotEmpty()
     }
 
-    private fun navigateToMainActivity() {
-        startActivity(Intent(this, MainActivity::class.java))
+    private fun navigateToMainActivity(user: UsuarioModel) {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("usuario", user) // UsuarioModel debe ser Parcelable o Serializable
+        startActivity(intent)
         finish()
     }
 
@@ -78,5 +85,28 @@ class LoginActivity : AppCompatActivity() {
         finish()
 
     }
+    private fun doLogin(username: String, password: String) {
+        val service = RetrofitClientInstance.retrofit.create(UsuarioApiService::class.java)
+        service.getUsuarioByNombre(username).enqueue(object : Callback<UsuarioModel> {
+            override fun onResponse(
+                call: Call<UsuarioModel>,
+                response: Response<UsuarioModel>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    val user = response.body()!!
+                    if (user.contrasena == password) {
+                        navigateToMainActivity(user)
+                    } else {
+                        showError("Usuario o contraseña incorrectos")
+                    }
+                } else {
+                    showError("Usuario no encontrado")
+                }
+            }
 
-}
+            override fun onFailure(call: Call<UsuarioModel>, t: Throwable) {
+                showError("Error de red: ${t.localizedMessage}")
+            }
+        })
+
+}}

@@ -5,35 +5,47 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.drawernav.Models.Pet
+import Models.PacienteModel
 import com.example.drawernav.R
+import java.util.Calendar
+import java.util.Date
 
-class MascotasAdapter(private var pets: List<Pet>) :
-    RecyclerView.Adapter<MascotasAdapter.PetViewHolder>() {
+class MascotasAdapter(private var mascotas: List<PacienteModel>) :
+    RecyclerView.Adapter<MascotasAdapter.MascotaViewHolder>() {
 
-    class PetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(pet: Pet) {
-            itemView.findViewById<TextView>(R.id.petName).text = pet.name
-            itemView.findViewById<TextView>(R.id.petSpecies).text = pet.species
-            itemView.findViewById<TextView>(R.id.petBreed).text = pet.breed
-            itemView.findViewById<TextView>(R.id.petAge).text = "edad "+pet.age.toString()
+    class MascotaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind(mascota: PacienteModel) {
+            itemView.findViewById<TextView>(R.id.petName).text = mascota.nombre
+            itemView.findViewById<TextView>(R.id.petSpecies).text = mascota.especie
+            itemView.findViewById<TextView>(R.id.petBreed).text = mascota.raza
+            itemView.findViewById<TextView>(R.id.petAge).text = "edad ${calcularEdad(mascota.fecha_nac)}"
+        }
+
+        private fun calcularEdad(fechaNac: Date): Int {
+            val nacimiento = Calendar.getInstance().apply { time = fechaNac }
+            val hoy = Calendar.getInstance()
+            var edad = hoy.get(Calendar.YEAR) - nacimiento.get(Calendar.YEAR)
+            if (hoy.get(Calendar.DAY_OF_YEAR) < nacimiento.get(Calendar.DAY_OF_YEAR)) {
+                edad--
+            }
+            return edad
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PetViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MascotaViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_mascotas, parent, false)
-        return PetViewHolder(view)
+        return MascotaViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: PetViewHolder, position: Int) {
-        holder.bind(pets[position])
+    override fun onBindViewHolder(holder: MascotaViewHolder, position: Int) {
+        holder.bind(mascotas[position])
     }
 
-    override fun getItemCount() = pets.size
+    override fun getItemCount() = mascotas.size
 
-    fun updateData(newPets: List<Pet>) {
-        pets = newPets
+    fun updateData(newMascotas: List<PacienteModel>) {
+        mascotas = newMascotas
         notifyDataSetChanged()
     }
 }

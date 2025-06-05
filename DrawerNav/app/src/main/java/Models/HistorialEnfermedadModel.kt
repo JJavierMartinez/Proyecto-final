@@ -1,5 +1,6 @@
 package Models
 
+import java.io.Serializable
 import java.util.Date
 
 data class HistorialEnfermedadModel(
@@ -9,4 +10,4 @@ data class HistorialEnfermedadModel(
     val estado: String,
     val tratamiento: String,
     val observaciones: String
-)
+) : Serializable

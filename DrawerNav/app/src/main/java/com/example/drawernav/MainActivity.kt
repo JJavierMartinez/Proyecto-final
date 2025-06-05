@@ -1,5 +1,6 @@
 package com.example.drawernav
 
+import Models.UsuarioModel
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -16,14 +17,14 @@ import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-
+    lateinit var usuarioLogueado: UsuarioModel
     private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-
+        usuarioLogueado = intent.getSerializableExtra("usuario") as UsuarioModel
 
         drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
 
