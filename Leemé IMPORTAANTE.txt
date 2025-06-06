@@ -1,0 +1,72 @@
+Para cargar la base de datos primero con MARIADB
+
+create database veterinaria;
+
+USE veterinaria;
+-- Insertar roles
+INSERT INTO `rol` (`id_rol`, `rol`, `descripcion`) VALUES
+(1, 'ADMINISTRADOR', 'Administrador del sistema con todos los permisos'),
+(2, 'VETERINARIO', 'Personal veterinario que atiende a los pacientes'),
+(3, 'USUARIO', 'Dueños de mascotas con permisos limitados');
+
+-- Insertar usuarios administradores
+INSERT INTO `usuarios` (`id_usuario`, `dni`, `apellidos`, `contrasena`, `correo`, `fecha_alta`, `fecha_nac`, `telefono`, `user`, `id_rol`) VALUES
+(1, '12345678A', 'García López', '1234', 'admin@veterinaria.com', NOW(), '1980-01-15 00:00:00', '600111222', 'admin', 1),
+(2, '87654321B', 'Martínez Sánchez', '1234', 'admin2@veterinaria.com', NOW(), '1985-05-20 00:00:00', '600222333', 'admin2', 1);
+
+-- Insertar veterinarios
+INSERT INTO `usuarios` (`id_usuario`, `dni`, `apellidos`, `contrasena`, `correo`, `fecha_alta`, `fecha_nac`, `telefono`, `user`, `id_rol`) VALUES
+(3, '11223344C', 'Rodríguez Pérez', '1234', 'vet1@veterinaria.com', NOW(), '1990-07-10 00:00:00', '600333444', 'vet1', 2),
+(4, '44332211D', 'Fernández Gómez', '1234', 'vet2@veterinaria.com', NOW(), '1988-03-25 00:00:00', '600444555', 'vet2', 2),
+(5, '55667788E', 'López Ruiz', '1234', 'vet3@veterinaria.com', NOW(), '1992-11-30 00:00:00', '600555666', 'vet3', 2);
+
+-- Insertar usuarios normales (dueños de mascotas)
+INSERT INTO `usuarios` (`id_usuario`, `dni`, `apellidos`, `contrasena`, `correo`, `fecha_alta`, `fecha_nac`, `telefono`, `user`, `id_rol`) VALUES
+(6, '99887766F', 'González Martínez', '1234', 'cliente1@gmail.com', NOW(), '1995-02-14 00:00:00', '600666777', 'cliente1', 3),
+(7, '66778899G', 'Sánchez Jiménez', '1234', 'cliente2@gmail.com', NOW(), '1987-09-18 00:00:00', '600777888', 'cliente2', 3),
+(8, '33445566H', 'Pérez García', '1234', 'cliente3@gmail.com', NOW(), '1993-12-05 00:00:00', '600888999', 'cliente3', 3);
+
+-- Insertar pacientes (mascotas)
+INSERT INTO `pacientes` (`id_paciente`, `apellidos`, `dni_mascota`, `especie`, `fecha_nac`, `fecha_registro`, `nombre`, `raza`, `seguro`, `id_dueno`) VALUES
+(1, NULL, 'M001', 'Perro', '2020-04-15 00:00:00', NOW(), 'Max', 'Labrador', b'1', 6),
+(2, NULL, 'M002', 'Gato', '2021-01-20 00:00:00', NOW(), 'Luna', 'Siamés', b'0', 6),
+(3, NULL, 'M003', 'Perro', '2019-07-10 00:00:00', NOW(), 'Rocky', 'Bulldog', b'1', 7),
+(4, NULL, 'M004', 'Gato', '2022-03-05 00:00:00', NOW(), 'Milo', 'Persa', b'1', 8),
+(5, NULL, 'M005', 'Perro', '2018-11-12 00:00:00', NOW(), 'Bella', 'Golden Retriever', b'0', 8);
+
+-- Insertar enfermedades comunes
+INSERT INTO `enfermedades` (`id_enfermedad`, `nombre`, `descripcion`) VALUES
+(1, 'Moquillo', 'Enfermedad viral canina altamente contagiosa'),
+(2, 'Parvovirus', 'Infección viral grave en perros'),
+(3, 'Leucemia felina', 'Enfermedad viral en gatos que afecta el sistema inmunológico'),
+(4, 'Otitis', 'Inflamación del oído'),
+(5, 'Dermatitis', 'Inflamación de la piel');
+
+-- Insertar historiales médicos
+INSERT INTO `historiales` (`id_historial`, `fecha_evento`, `notas`, `tipo_evento`, `id_paciente`) VALUES
+(1, NOW(), 'Primera consulta de rutina', 'Consulta', 1),
+(2, NOW(), 'Vacunación anual', 'Vacunación', 1),
+(3, NOW(), 'Revisión postoperatoria', 'Revisión', 3),
+(4, NOW(), 'Desparasitación', 'Tratamiento', 2),
+(5, NOW(), 'Chequeo general', 'Consulta', 4);
+
+-- Insertar relación historial-enfermedad
+INSERT INTO `historial_enfermedad` (`id_enfermedad`, `id_historial`, `estado`, `fecha_diagnostico`, `observaciones`, `tratamiento`) VALUES
+(4, 1, 'Tratado', NOW(), 'Leve inflamación en oído derecho', 'Gotas óticas cada 12 horas por 7 días'),
+(5, 3, 'Crónico', NOW(), 'Dermatitis alérgica estacional', 'Antihistamínicos y champú especial');
+
+-- Insertar pagos
+INSERT INTO `pagos` (`id_pago`, `fecha`, `metodo_pago`, `monto`) VALUES
+(1, NOW(), 'Tarjeta', 50.00),
+(2, NOW(), 'Efectivo', 30.00),
+(3, NOW(), 'Transferencia', 75.00),
+(4, NOW(), 'Tarjeta', 45.00),
+(5, NOW(), 'Efectivo', 60.00);
+
+-- Insertar citas
+INSERT INTO `citas` (`id_cita`, `fecha`, `motivo`, `id_paciente`, `id_pago`, `id_veterinario`) VALUES
+(1, DATE_ADD(NOW(), INTERVAL 1 DAY), 'Consulta de rutina', 1, 1, 3),
+(2, DATE_ADD(NOW(), INTERVAL 2 DAY), 'Vacunación anual', 2, 2, 4),
+(3, DATE_ADD(NOW(), INTERVAL 3 DAY), 'Revisión de dermatitis', 3, 3, 3),
+(4, DATE_ADD(NOW(), INTERVAL 4 DAY), 'Chequeo postoperatorio', 5, 4, 5),
+(5, DATE_ADD(NOW(), INTERVAL 5 DAY), 'Desparasitación', 4, 5, 4);
