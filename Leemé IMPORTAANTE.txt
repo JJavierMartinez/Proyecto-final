@@ -2,6 +2,8 @@ Para cargar la base de datos primero con MARIADB
 
 create database veterinaria;
 
+después ejecutar el jar para que spring cree las tablas y a continuación ejecutar un script sql con los siguientes inserts.
+
 USE veterinaria;
 -- Insertar roles
 INSERT INTO `rol` (`id_rol`, `rol`, `descripcion`) VALUES
